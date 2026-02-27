@@ -8,9 +8,18 @@ from sklearn.naive_bayes import GaussianNB
 X_train = pd.read_csv("data/processed/X_train.csv")
 y_train = pd.read_csv("data/processed/y_train.csv").values.ravel()
 
-# Initialize models
-rf = RandomForestClassifier(n_estimators=100, random_state=42)
-dt = DecisionTreeClassifier(random_state=42)
+# Reduce memory usage
+X_train = X_train.astype("float32")
+
+# Initialize models (memory optimized)
+rf = RandomForestClassifier(
+    n_estimators=20,
+    max_depth=10,
+    n_jobs=1,
+    random_state=42
+)
+
+dt = DecisionTreeClassifier(max_depth=10, random_state=42)
 nb = GaussianNB()
 
 # Train models
@@ -23,4 +32,4 @@ joblib.dump(rf, "models/random_forest.pkl")
 joblib.dump(dt, "models/decision_tree.pkl")
 joblib.dump(nb, "models/naive_bayes.pkl")
 
-print("Models Trained & Saved ")
+print("Models Trained & Saved Successfully")

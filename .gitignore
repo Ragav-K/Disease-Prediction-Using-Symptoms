@@ -1,7 +1,0 @@
-__pycache__/
-*.pyc
-*.pkl
-data/processed/
-models/
-*.csv
-data/raw/dataset.csv

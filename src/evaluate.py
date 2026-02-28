@@ -1,22 +1,18 @@
 import pandas as pd
 import joblib
 from sklearn.metrics import accuracy_score, classification_report
-
-
 X_test = pd.read_csv("data/processed/X_test.csv")
 y_test = pd.read_csv("data/processed/y_test.csv").values.ravel()
-
-
 rf = joblib.load("models/random_forest.pkl")
 dt = joblib.load("models/decision_tree.pkl")
-nb = joblib.load("models/naive_bayes.pkl")
-
+gb = joblib.load("models/gradient_boosting.pkl")
+ensemble = joblib.load("models/ensemble_model.pkl")
 models = {
     "Random Forest": rf,
     "Decision Tree": dt,
-    "Naive Bayes": nb
+    "Gradient Boosting": gb,
+    "Ensemble Model": ensemble
 }
-
 for name, model in models.items():
     y_pred = model.predict(X_test)
     print(f"\n{name}")

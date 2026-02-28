@@ -9,19 +9,19 @@ y_train = pd.read_csv("data/processed/y_train.csv").values.ravel()
 X_train = X_train.astype("float32")
 
 rf = RandomForestClassifier(
-    n_estimators=200,
-    max_depth=None,
-    min_samples_split=2,
-    min_samples_leaf=1,
+    n_estimators=100,       # Reduced from 200 to save memory
+    max_depth=20,           # Limit depth to prevent memory explosion
+    min_samples_split=5,
+    min_samples_leaf=2,
     max_features='sqrt',
-    n_jobs=-1,
+    n_jobs=2,               # Only 2 parallel jobs instead of -1 (all cores)
     random_state=42
 )
 
 dt = DecisionTreeClassifier(
-    max_depth=None,
-    min_samples_split=2,
-    min_samples_leaf=1,
+    max_depth=20,           # Limit depth to prevent memory explosion
+    min_samples_split=5,
+    min_samples_leaf=2,
     random_state=42
 )
 
@@ -33,8 +33,13 @@ gb = GradientBoostingClassifier(
 )
 
 rf.fit(X_train, y_train)
+print("Random Forest trained")
+
 dt.fit(X_train, y_train)
+print("Decision Tree trained")
+
 gb.fit(X_train, y_train)
+print("Gradient Boosting trained")
 
 joblib.dump(rf, "models/random_forest.pkl")
 joblib.dump(dt, "models/decision_tree.pkl")

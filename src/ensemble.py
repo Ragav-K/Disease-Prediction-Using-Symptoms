@@ -8,12 +8,12 @@ X_test = pd.read_csv("data/processed/X_test.csv")
 y_test = pd.read_csv("data/processed/y_test.csv").values.ravel()
 rf = joblib.load("models/random_forest.pkl")
 dt = joblib.load("models/decision_tree.pkl")
-gb = joblib.load("models/gradient_boosting.pkl")
+et = joblib.load("models/extra_trees.pkl")
 ensemble_model = VotingClassifier(
     estimators=[
         ("rf", rf),
         ("dt", dt),
-        ("gb", gb)
+        ("et", et)
     ],
     voting="soft"
 )

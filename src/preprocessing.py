@@ -7,11 +7,13 @@ df = pd.read_csv("data/raw/dataset.csv")
 X = df.drop("diseases", axis=1)
 y = df["diseases"]
 
+min_samples = 10 
 class_counts = y.value_counts()
-valid_classes = class_counts[class_counts >= 2].index
+valid_classes = class_counts[class_counts >= min_samples].index
 mask = y.isin(valid_classes)
 X = X[mask]
 y = y[mask]
+print(f"Filtered out {len(class_counts) - len(valid_classes)} rare diseases to improve accuracy.")
 
 le = LabelEncoder()
 y_encoded = le.fit_transform(y)

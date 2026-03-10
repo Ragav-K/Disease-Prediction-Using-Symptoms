@@ -1,39 +1,43 @@
 import pandas as pd
 import joblib
+import gc  
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
 
-X_train = pd.read_csv("data/processed/X_train.csv")
+
+X_train = pd.read_csv("data/processed/X_train.csv").astype("float32")
 y_train = pd.read_csv("data/processed/y_train.csv").values.ravel()
 
-X_train = X_train.astype("float32")
-
-
-rf = RandomForestClassifier(
-    n_estimators=150,
-    max_depth=50,       
-    min_samples_split=2,
-    min_samples_leaf=1,
-    max_features='sqrt',
-    n_jobs=2,
-    random_state=42
-)
-
-et = ExtraTreesClassifier(
-    n_estimators=150,
-    max_depth=50,
-    min_samples_split=2,
-    min_samples_leaf=1,
-    n_jobs=2,
-    random_state=42
-)
 
 print("Training Random Forest...")
+rf = RandomForestClassifier(
+    n_estimators=100,
+    max_depth=35,        
+    min_samples_leaf=3,
+    n_jobs=1,            r
+    random_state=42
+)
 rf.fit(X_train, y_train)
+joblib.dump(rf, "models/random_forest.pkl")
+
+
+del rf
+gc.collect() 
+print("Random Forest saved and cleared from RAM.")
+
 
 print("Training Extra Trees...")
+et = ExtraTreesClassifier(
+    n_estimators=100,
+    max_depth=35,
+    min_samples_leaf=3,
+    n_jobs=1,
+    random_state=42
+)
 et.fit(X_train, y_train)
-
-joblib.dump(rf, "models/random_forest.pkl")
 joblib.dump(et, "models/extra_trees.pkl")
 
-print("Models Trained & Saved Successfully (Removed weak DecisionTree)")
+del et
+gc.collect()
+print("Extra Trees saved and cleared from RAM.")
+
+print("\nAll Models Trained Successfully!")

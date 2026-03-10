@@ -13,7 +13,7 @@ rf = RandomForestClassifier(
     n_estimators=100,
     max_depth=35,        
     min_samples_leaf=3,
-    n_jobs=1,            r
+    n_jobs=1,            
     random_state=42
 )
 rf.fit(X_train, y_train)

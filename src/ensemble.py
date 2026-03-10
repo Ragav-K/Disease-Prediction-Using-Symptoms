@@ -1,23 +1,21 @@
 import pandas as pd
+import numpy as np
 import joblib
-from sklearn.ensemble import VotingClassifier
 from sklearn.metrics import accuracy_score
-X_train = pd.read_csv("data/processed/X_train.csv")
-y_train = pd.read_csv("data/processed/y_train.csv").values.ravel()
 X_test = pd.read_csv("data/processed/X_test.csv")
 y_test = pd.read_csv("data/processed/y_test.csv").values.ravel()
 rf = joblib.load("models/random_forest.pkl")
 dt = joblib.load("models/decision_tree.pkl")
 et = joblib.load("models/extra_trees.pkl")
-ensemble_model = VotingClassifier(
-    estimators=[
-        ("rf", rf),
-        ("dt", dt),
-        ("et", et)
-    ],
-    voting="soft"
-)
-ensemble_model.fit(X_train, y_train)
-y_pred = ensemble_model.predict(X_test)
+
+rf_proba = rf.predict_proba(X_test)
+dt_proba = dt.predict_proba(X_test)
+et_proba = et.predict_proba(X_test)
+
+avg_proba = (rf_proba + dt_proba + et_proba) / 3
+
+y_pred = np.argmax(avg_proba, axis=1)
 print("Ensemble Accuracy:", accuracy_score(y_test, y_pred))
+
+ensemble_model = {"rf": rf, "dt": dt, "et": et}
 joblib.dump(ensemble_model, "models/ensemble_model.pkl")
